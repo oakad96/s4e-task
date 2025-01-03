@@ -1,33 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Pagination } from "@/components/pagination";
-
-const categories = [
-  "DNS Controls",
-  "SSL Controls",
-  "Misconfiguration",
-  "Network Vulnerabilities",
-  "Web Vulnerabilities",
-  "Information Scans",
-  "Product Based Web Vulnerabilities",
-  "Product Based Network Vulnerabilities",
-];
+import { ScanTable } from "@/components/scan-table";
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -69,14 +42,6 @@ export default function Home() {
     fetchData(page);
   }, [page, perPage]);
 
-  const handleNextPage = () => {
-    setPage((prev) => prev + 1);
-  };
-
-  const handlePrevPage = () => {
-    setPage((prev) => (prev > 1 ? prev - 1 : prev));
-  };
-
   if (loading) {
     return <div className="p-4">Loading...</div>;
   }
@@ -85,60 +50,20 @@ export default function Home() {
     return <div className="p-4 text-red-600">Error: {error}</div>;
   }
 
-  console.log(data);
-
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Scan Results</h1>
-
-      <div className="flex gap-4 mb-4">
-        <div className="flex-1">
-          <Input
-            placeholder="Search scans..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="max-w-sm"
-          />
-        </div>
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-[280px]">
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Description</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.value?.data?.map((scan) => (
-              <TableRow key={scan.slug}>
-                <TableCell>{scan.meta_title}</TableCell>
-                <TableCell>{scan.mini_desc}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Pagination
-          page={page}
-          perPage={perPage}
-          total={data?.value?.total_count || 0}
-          onPageChange={setPage}
-          onPerPageChange={setPerPage}
-        />
-      </div>
+      <ScanTable
+        data={data}
+        page={page}
+        perPage={perPage}
+        search={search}
+        selectedCategory={selectedCategory}
+        onSearchChange={setSearch}
+        onCategoryChange={setSelectedCategory}
+        onPageChange={setPage}
+        onPerPageChange={setPerPage}
+      />
     </div>
   );
 }
