@@ -1,11 +1,15 @@
 "use client";
 
+import Image from "next/image";
+import s4eLogo from "../public/s4e-logo.png";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   Home,
@@ -31,14 +35,24 @@ const menuItems = [
 ];
 
 export function MainSidebar() {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
   return (
-    <Sidebar collapsible="none">
+    <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-border p-4">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold">
-            S4E
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Image
+              src={s4eLogo}
+              alt="Security4Ever Logo"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
+            {!isCollapsed && <div className="font-semibold">Security4Ever</div>}
           </div>
-          <div className="font-semibold">Security4Ever</div>
+          <SidebarTrigger />
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -47,6 +61,7 @@ export function MainSidebar() {
             <SidebarMenuButton
               key={item.href}
               className="w-full justify-start gap-2"
+              tooltip={isCollapsed ? item.label : undefined}
             >
               <item.icon className="h-4 w-4" />
               <span>{item.label}</span>
