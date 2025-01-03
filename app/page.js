@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Pagination } from "@/components/pagination";
 
 const categories = [
   "DNS Controls",
@@ -130,33 +131,13 @@ export default function Home() {
             ))}
           </TableBody>
         </Table>
-      </div>
-
-      <div className="flex gap-4 items-center mt-4">
-        <button
-          onClick={handlePrevPage}
-          disabled={page === 1}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300"
-        >
-          Previous
-        </button>
-        <span>Page {page}</span>
-        <button
-          onClick={handleNextPage}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Next
-        </button>
-        <select
-          value={perPage}
-          onChange={(e) => setPerPage(Number(e.target.value))}
-          className="px-4 py-2 border rounded"
-        >
-          <option value={10}>10 per page</option>
-          <option value={20}>20 per page</option>
-          <option value={30}>30 per page</option>
-          <option value={50}>50 per page</option>
-        </select>
+        <Pagination
+          page={page}
+          perPage={perPage}
+          total={data?.value?.total_count || 0}
+          onPageChange={setPage}
+          onPerPageChange={setPerPage}
+        />
       </div>
     </div>
   );
