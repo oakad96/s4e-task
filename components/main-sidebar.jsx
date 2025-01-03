@@ -11,6 +11,8 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 import {
   Home,
   Shield,
@@ -35,11 +37,11 @@ const menuItems = [
 ];
 
 export function MainSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile, openMobile, setOpenMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
 
-  return (
-    <Sidebar collapsible="icon">
+  const SidebarContents = (
+    <>
       <SidebarHeader className="border-b border-border p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -50,9 +52,11 @@ export function MainSidebar() {
               height={32}
               className="rounded-lg"
             />
-            {!isCollapsed && <div className="font-semibold">Security4Ever</div>}
+            {(!isCollapsed || isMobile) && (
+              <div className="font-semibold">Security4Ever</div>
+            )}
           </div>
-          <SidebarTrigger />
+          {!isMobile && <SidebarTrigger />}
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -61,7 +65,7 @@ export function MainSidebar() {
             <SidebarMenuButton
               key={item.href}
               className="w-full justify-start gap-2"
-              tooltip={isCollapsed ? item.label : undefined}
+              tooltip={isCollapsed && !isMobile ? item.label : undefined}
             >
               <item.icon className="h-4 w-4" />
               <span>{item.label}</span>
@@ -69,6 +73,23 @@ export function MainSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-    </Sidebar>
+    </>
+  );
+
+  return (
+    <>
+      {isMobile && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed left-4 top-4 z-40 md:hidden"
+          onClick={() => setOpenMobile(true)}
+        >
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Toggle Menu</span>
+        </Button>
+      )}
+      <Sidebar collapsible="icon">{SidebarContents}</Sidebar>
+    </>
   );
 }
