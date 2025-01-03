@@ -11,7 +11,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const fetchData = async (pageNumber) => {
+  const fetchData = async () => {
     try {
       setLoading(true);
       const response = await fetch("/api/scans", {
@@ -20,8 +20,10 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          page: pageNumber,
+          page,
           per_page: perPage,
+          query: search,
+          category_id: selectedCategory || undefined,
         }),
       });
 
@@ -39,12 +41,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchData(page);
-  }, [page, perPage]);
-
-  if (loading) {
-    return <div className="p-4">Loading...</div>;
-  }
+    fetchData();
+  }, [page, perPage, search, selectedCategory]);
 
   if (error) {
     return <div className="p-4 text-red-600">Error: {error}</div>;
@@ -63,6 +61,7 @@ export default function Home() {
         onCategoryChange={setSelectedCategory}
         onPageChange={setPage}
         onPerPageChange={setPerPage}
+        isLoading={loading}
       />
     </div>
   );

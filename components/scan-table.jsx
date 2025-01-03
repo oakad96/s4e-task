@@ -15,16 +15,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Pagination } from "@/components/pagination";
+import { useEffect } from "react";
 
 const categories = [
-  "DNS Controls",
-  "SSL Controls",
-  "Misconfiguration",
-  "Network Vulnerabilities",
-  "Web Vulnerabilities",
-  "Information Scans",
-  "Product Based Web Vulnerabilities",
-  "Product Based Network Vulnerabilities",
+  { id: 1, label: "DNS Controls" },
+  { id: 2, label: "SSL Controls" },
+  { id: 3, label: "Misconfiguration" },
+  { id: 4, label: "Network Vulnerabilities" },
+  { id: 5, label: "Web Vulnerabilities" },
+  { id: 6, label: "Information Scans" },
+  { id: 7, label: "Product Based Web Vulnerabilities" },
+  { id: 8, label: "Product Based Network Vulnerabilities" },
 ];
 
 export function ScanTable({
@@ -37,7 +38,17 @@ export function ScanTable({
   onCategoryChange,
   onPageChange,
   onPerPageChange,
+  isLoading,
 }) {
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onSearchChange(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search, onSearchChange]);
+
   return (
     <div className="p-4 rounded-md">
       <div className="flex justify-start items-baseline gap-4 mb-4">
@@ -55,8 +66,8 @@ export function ScanTable({
           </SelectTrigger>
           <SelectContent>
             {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category}
+              <SelectItem key={category.id} value={category.id}>
+                {category.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -72,12 +83,22 @@ export function ScanTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.value?.data?.map((scan) => (
-              <TableRow key={scan.slug}>
-                <TableCell className="font-medium">{scan.meta_title}</TableCell>
-                <TableCell>{scan.mini_desc}</TableCell>
+            {isLoading ? (
+              <TableRow>
+                <TableCell colSpan={2} className="text-center">
+                  Loading...
+                </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              data?.value?.data?.map((scan) => (
+                <TableRow key={scan.slug}>
+                  <TableCell className="font-medium">
+                    {scan.meta_title}
+                  </TableCell>
+                  <TableCell>{scan.mini_desc}</TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
         <Pagination
