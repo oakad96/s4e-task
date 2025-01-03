@@ -1,5 +1,32 @@
 "use client";
 import { useEffect, useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const categories = [
+  "DNS Controls",
+  "SSL Controls",
+  "Misconfiguration",
+  "Network Vulnerabilities",
+  "Web Vulnerabilities",
+  "Information Scans",
+  "Product Based Web Vulnerabilities",
+  "Product Based Network Vulnerabilities",
+];
 
 export default function Home() {
   const [data, setData] = useState(null);
@@ -7,6 +34,8 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const fetchData = async (pageNumber) => {
     try {
@@ -55,14 +84,55 @@ export default function Home() {
     return <div className="p-4 text-red-600">Error: {error}</div>;
   }
 
+  console.log(data);
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Scan Results</h1>
-      <div className="bg-gray-100 p-4 rounded mb-4">
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+
+      <div className="flex gap-4 mb-4">
+        <div className="flex-1">
+          <Input
+            placeholder="Search scans..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="max-w-sm"
+          />
+        </div>
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[280px]">
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category} value={category}>
+                {category}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="flex gap-4 items-center">
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Description</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data?.value?.data?.map((scan) => (
+              <TableRow key={scan.slug}>
+                <TableCell>{scan.meta_title}</TableCell>
+                <TableCell>{scan.mini_desc}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex gap-4 items-center mt-4">
         <button
           onClick={handlePrevPage}
           disabled={page === 1}
