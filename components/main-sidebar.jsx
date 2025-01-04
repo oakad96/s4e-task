@@ -48,13 +48,10 @@ export function MainSidebar() {
             <Image
               src={s4eLogo}
               alt="Security4Ever Logo"
-              width={32}
-              height={32}
+              width={128}
+              height={128}
               className="rounded-lg"
             />
-            {(!isCollapsed || isMobile) && (
-              <div className="font-semibold">Security4Ever</div>
-            )}
           </div>
           {!isMobile && <SidebarTrigger />}
         </div>
