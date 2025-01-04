@@ -1,7 +1,13 @@
 export async function POST(request) {
-  const API_URL = "https://api.s4e.io/api";
-  const token =
-    "TBt7Y83c7bsDH_uQEuWDq3a5UfZGoV2UgFLuwMjUG7K9NgaQ1HN4qa_lJtjEnBHG-8TqlH6p_Sq9NKDL88wboA";
+  const API_URL = process.env.S4E_API_URL;
+  const token = process.env.S4E_API_TOKEN;
+
+  if (!API_URL || !token) {
+    return Response.json(
+      { error: "API configuration missing" },
+      { status: 500 }
+    );
+  }
 
   try {
     const body = await request.json();
