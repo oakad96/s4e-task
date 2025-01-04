@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Pagination } from "@/components/pagination";
 import { useEffect } from "react";
+import { X } from "lucide-react";
 
 const categories = [
   { id: 1, label: "DNS Controls" },
@@ -59,18 +60,29 @@ export function ScanTable({
             className="max-w-sm"
           />
         </div>
-        <Select value={selectedCategory} onValueChange={onCategoryChange}>
-          <SelectTrigger className="w-[280px]">
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.id}>
-                {category.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="relative">
+          <Select value={selectedCategory} onValueChange={onCategoryChange}>
+            <SelectTrigger className="w-[280px]">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {selectedCategory && (
+            <button
+              onClick={() => onCategoryChange("")}
+              className="absolute right-10 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-sm"
+              aria-label="Clear category filter"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="rounded-md border">

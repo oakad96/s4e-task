@@ -1,16 +1,72 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ScanTable } from "@/components/scan-table";
+import { X } from "lucide-react";
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
 
+  // Initialize state from URL params
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+  const [perPage, setPerPage] = useState(
+    Number(searchParams.get("per_page")) || 10
+  );
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category") || ""
+  );
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  // Update URL and trigger fetch only when debounced search changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Update URL when filters change
+  const updateURL = (updates) => {
+    const params = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    router.push(`?${params.toString()}`);
+  };
+
+  // Handler functions
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    updateURL({ search: value, page: 1 });
+  };
+
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
+    updateURL({ category: value, page: 1 });
+  };
+
+  const handlePageChange = (value) => {
+    setPage(value);
+    updateURL({ page: value });
+  };
+
+  const handlePerPageChange = (value) => {
+    setPerPage(value);
+    updateURL({ per_page: value, page: 1 });
+  };
+
+  // Fetch data
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -57,10 +113,10 @@ export default function Home() {
         perPage={perPage}
         search={search}
         selectedCategory={selectedCategory}
-        onSearchChange={setSearch}
-        onCategoryChange={setSelectedCategory}
-        onPageChange={setPage}
-        onPerPageChange={setPerPage}
+        onSearchChange={handleSearchChange}
+        onCategoryChange={handleCategoryChange}
+        onPageChange={handlePageChange}
+        onPerPageChange={handlePerPageChange}
         isLoading={loading}
       />
     </div>
