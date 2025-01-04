@@ -41,14 +41,6 @@ export function ScanTable({
   onPerPageChange,
   isLoading,
 }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onSearchChange(search);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [search, onSearchChange]);
-
   return (
     <div className="p-4 rounded-md">
       <div className="flex justify-start items-baseline gap-4 mb-4">

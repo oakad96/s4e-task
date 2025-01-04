@@ -12,7 +12,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Initialize state from URL params
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [perPage, setPerPage] = useState(
     Number(searchParams.get("per_page")) || 10
@@ -23,7 +22,6 @@ export default function Home() {
   );
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
-  // Update URL and trigger fetch only when debounced search changes
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -32,7 +30,6 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Update URL when filters change
   const updateURL = (updates) => {
     const params = new URLSearchParams(searchParams);
     Object.entries(updates).forEach(([key, value]) => {
@@ -45,7 +42,6 @@ export default function Home() {
     router.push(`?${params.toString()}`);
   };
 
-  // Handler functions
   const handleSearchChange = (value) => {
     setSearch(value);
     updateURL({ search: value, page: 1 });
@@ -66,7 +62,6 @@ export default function Home() {
     updateURL({ per_page: value, page: 1 });
   };
 
-  // Fetch data
   const fetchData = async () => {
     try {
       setLoading(true);
