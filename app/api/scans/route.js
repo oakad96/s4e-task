@@ -13,6 +13,8 @@ export async function POST(request) {
     const body = await request.json();
     const { page = 1, per_page = 10, query = "", category_id = "" } = body;
 
+    const queryParam = query && query.length >= 3 ? query : undefined;
+
     const response = await fetch(`${API_URL}/scan/list`, {
       method: "POST",
       headers: {
@@ -22,7 +24,7 @@ export async function POST(request) {
       body: JSON.stringify({
         page,
         per_page,
-        query: query ? query : undefined,
+        query: queryParam,
         scan_category_id: category_id ? category_id : undefined,
         token: token,
       }),

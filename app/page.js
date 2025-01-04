@@ -23,11 +23,12 @@ export default function Home() {
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 500);
-
-    return () => clearTimeout(timer);
+    if (search.length >= 3 || search.length === 0) {
+      const timer = setTimeout(() => {
+        updateURL({ search: search, page: 1 });
+      }, 500);
+      return () => clearTimeout(timer);
+    }
   }, [search]);
 
   const updateURL = (updates) => {
@@ -93,7 +94,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-  }, [page, perPage, search, selectedCategory]);
+  }, [page, perPage, debouncedSearch, selectedCategory]);
 
   if (error) {
     return <div className="p-4 text-red-600">Error: {error}</div>;
