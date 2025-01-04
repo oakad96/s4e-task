@@ -34,7 +34,16 @@ or
 yarn install
 ```
 
-3. Run the development server:
+3. Set up environment variables:
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```bash
+S4E_API_URL=your_api_url_here
+S4E_API_TOKEN=your_api_token_here
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
@@ -46,7 +55,7 @@ or
 yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Project Structure
 
