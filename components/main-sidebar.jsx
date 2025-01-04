@@ -80,16 +80,18 @@ export function MainSidebar() {
     <>
       {isMobile && (
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="fixed left-4 top-4 z-40 md:hidden"
+          className="fixed left-4 top-4 z-40 md:hidden rounded-full"
           onClick={() => setOpenMobile(true)}
         >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>
       )}
-      <Sidebar collapsible="icon">{SidebarContents}</Sidebar>
+      <Sidebar collapsible="icon" aria-label="Main Navigation">
+        {SidebarContents}
+      </Sidebar>
     </>
   );
 }
