@@ -40,7 +40,6 @@ export function ScanTable({
   onPerPageChange,
   isLoading,
 }) {
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       onSearchChange(search);

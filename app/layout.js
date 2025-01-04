@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Security4Ever Dashboard",
+  title: "S4E",
   description: "Security scanning and monitoring dashboard",
 };
 

@@ -50,7 +50,7 @@ export default function Home() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Scan Results</h1>
+      <h1 className="text-2xl font-bold mb-4">Free Tools</h1>
       <ScanTable
         data={data}
         page={page}
